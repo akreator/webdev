@@ -1,0 +1,13 @@
+<ol>
+    {% for i in range (1, n + 1) %}
+        <li> 
+            {% if n % 3 == 0 %}
+            Fizz
+            {% if n % 5 == 0 %}
+            Buzz
+            {% if n % 3 != 0 and n % 5 != 0 %}
+            i
+            {% endif %}
+        </li>
+    {% endfor %}
+ </ol>
