@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="blog">
+  <div class="post-title">
+    {{ post.title }}
+    <br>
+    {{ post.date_posted }}
+  </div>
+  <pre class="post-body">{{ post.content }}</pre>
+</div>
+
+<div class="error">{{ error }}</div>
+<br>
+<br>
+
+<form method="post">
+  <input type="submit" value="Return to main">
+</form>
+{% endblock %}

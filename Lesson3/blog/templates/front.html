@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Blog Posts</h2>
+{% for post in blog %}
+    <div class="blog">
+      <div class="post-title">{{ post.title }}
+        <br>
+        {{ post.date_posted }}
+      </div>
+      <pre class="post-body">{{ post.content }}</pre>
+      <form action="/{{ post.key().id() }}">
+        <input type="submit" value="View Post">
+      </form>
+    </div>
+    <br>
+    <br>
+{% endfor %}
+
+{% endblock %}

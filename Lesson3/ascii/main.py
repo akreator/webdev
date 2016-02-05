@@ -5,8 +5,8 @@ import webapp2
 from google.appengine.ext import db
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
-jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir),
-autoescape = True)
+jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir), autoescape = True)
+
 
 class Handler(webapp2.RequestHandler):    
     def write(self, *a, **kw):
@@ -18,11 +18,13 @@ class Handler(webapp2.RequestHandler):
         
     def render(self, template, **kw):
         self.write(self.render_str(template, **kw))
+
         
 class Art(db.Model): #class name = name of table (class IS table)
     title = db.StringProperty(required=True)
     art = db.TextProperty(required=True)
-    created = db.DateTimeProperty(auto_now_add = True)    
+    created = db.DateTimeProperty(auto_now_add = True)
+
 
 class MainHandler(Handler):
     def render_front(self, title="", art="", error=""):
@@ -42,7 +44,7 @@ class MainHandler(Handler):
 
             self.redirect("/")
         else:
-            error = "Blank art with no title?  So original...\nThis is too unique for us.  We can't show it on the site."
+            error = "Blank art with no title?  So original...\nThis is too unique for us.  We can\'t show it on the site."
             self.render_front(title, art, error)
 
 app = webapp2.WSGIApplication([('/', MainHandler)], debug=True)
