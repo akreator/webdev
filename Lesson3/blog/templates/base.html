@@ -12,6 +12,10 @@
     <br>
     <a href="/newpost">Create a new post</a>
   </h3>
+  <p>
+    {% if user %}
+    Welcome, {{ user.username }}
+    {% endif %}
   <br>
   <br>
   {% block content %}

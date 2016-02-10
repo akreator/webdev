@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Sign Up:</h1>
+<form method="POST">
+    <label> Username:
+        <input type="text" name="username" value="{{ username }}">
+    </label> {{ nameerror }} {{ nametaken }}
+    <br>
+    <br>
+    <label> Password:
+        <input type="password" name="password">
+    </label> {{ passworderror }}
+    <br>
+    <br>
+    <label> Verify Password:
+        <input type="password" name="verify">
+    </label> {{ verifyerror }}
+    <br>
+    <br>
+    <label> E-mail: (Optional)
+        <input type="text" name="email" value="{{ email }}">
+    </label> {{ emailerror }}
+    <br>
+    <br>
+    <input type="submit">
+</form>
+{% endblock %}
