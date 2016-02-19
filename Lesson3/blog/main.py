@@ -3,6 +3,8 @@ import os
 import webapp2
 import re
 import utilities
+import json
+
 
 from google.appengine.ext import db
 
@@ -10,12 +12,20 @@ template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader=jinja2.FileSystemLoader(template_dir), autoescape = True)
 
 
-class Blog(db.Model): #class name = name of table (class IS table)
+class Blog(db.Model):
     title = db.StringProperty(required=True)
     content = db.TextProperty(required=True)
     username = db.StringProperty(required=True)
-    time_posted = db.DateTimeProperty(auto_now_add = True)
-    date_posted = db.DateProperty(auto_now_add = True)
+    time_posted = db.DateTimeProperty(auto_now_add=True)
+    date_posted = db.DateProperty(auto_now_add=True)
+
+    def to_dict(self):
+        bdict = { "title" : self.title,
+                  "content" : self.content,
+                  "username": self.username,
+                  "time_posted" : str(self.time_posted),
+                  "post_id": str(self.key().id()) }
+        return bdict
 
 
 class Users(db.Model):
@@ -30,7 +40,7 @@ class Users(db.Model):
 
     @classmethod
     def get_by_username(cls, username):
-        user = db.GqlQuery("SELECT * FROM Blog WHERE username=:1", username).get()
+        user = db.GqlQuery("SELECT * FROM Users WHERE username=:1", username).get()
         return user
 
     @classmethod
@@ -55,7 +65,7 @@ class Handler(webapp2.RequestHandler):
         cookie_val = utilities.make_secure_val(val)
         self.response.headers.add_header('set-cookie', '%s=%s; path=/' % (name, cookie_val))
 
-    def read_secure_cooke(self, name):
+    def read_secure_cookie(self, name):
         cookie_val = self.request.cookies.get(name)
         return cookie_val and utilities.check_secure_val(cookie_val)
 
@@ -67,13 +77,24 @@ class Handler(webapp2.RequestHandler):
 
     def initialize(self, *a, **kw):
         webapp2.RequestHandler.initialize(self, *a, **kw)
-        uid = self.read_secure_cooke('userid')
+        uid = self.read_secure_cookie('userid')
         self.user = uid and Users.get_by_id(int(uid))
+
+    def create_json(self, blog):
+        if len(blog) > 1:
+            posts = []
+            for b in blog:
+                posts.append(b.to_dict())
+            return json.dumps(posts)
+        elif blog:
+            return json.dumps(blog[0].to_dict())
+
 
 
 class FrontHandler(Handler):
     def get(self):
         blog = db.GqlQuery("SELECT * FROM Blog ORDER BY time_posted DESC LIMIT 10")
+        blog = list(blog)
         self.render("front.html", blog=blog, user=self.user)
 
 
@@ -88,7 +109,7 @@ class NewHandler(Handler):
             self.redirect('/login')
 
     def post(self):
-        title = self.request.get("title")
+        title = self.request.get("subject")
         content = self.request.get("content")
 
         if title and len(content) > 0:
@@ -133,7 +154,7 @@ class SignupHandler(Handler):
         if all(e is '~' for e in errors):
             if not Users.get_by_username(self.request.get("username")):
                 newuser = Users.register(self.request.get("username"),
-                                         utilities.make_secure_val(self.request.get("password")),
+                                         self.request.get("password"),
                                          self.request.get("email"))
                 newuser.put()
                 self.login(newuser)
@@ -169,10 +190,28 @@ class WelcomeHandler(Handler):
         else:
             self.redirect('/login')
 
+
 class LogoutHandler(Handler):
     def get(self):
         self.logout()
         self.redirect('/signup')
+
+
+class MainJSONHandler(Handler):
+    def get(self):
+        blog = db.GqlQuery("SELECT * FROM Blog ORDER BY time_posted DESC LIMIT 10")
+        self.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
+        self.write(self.create_json(list(blog)))
+
+
+class PermalinkJSONHandler(Handler):
+    def get(self, post_id):
+        post = Blog.get_by_id(int(post_id))
+        if post:
+            self.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
+            self.write(self.create_json([post]))
+        else:
+            self.write("Post not found.")
 
 
 app = webapp2.WSGIApplication([('/', FrontHandler),
@@ -181,4 +220,6 @@ app = webapp2.WSGIApplication([('/', FrontHandler),
                                ('/signup', SignupHandler),
                                ('/welcome', WelcomeHandler),
                                ('/login', LoginHandler),
-                               ('/logout', LogoutHandler)], debug=True)
+                               ('/logout', LogoutHandler),
+                               ('/\.json', MainJSONHandler),
+                               (r'/(\d+)\.json', PermalinkJSONHandler)], debug=True)

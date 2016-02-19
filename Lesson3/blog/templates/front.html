@@ -10,9 +10,9 @@
             <pre>{{ post.date_posted }}     {{ post.username }}</pre>
       </div>
       <pre class="post-body">{{ post.content }}</pre>
-      <form action="/{{ post.key().id() }}">
-          <input type="submit" value="View Post">
-      </form>
+      <div>
+          <a href="/{{ post.key().id() }}">View Post</a>
+      </div>
     </div>
     <br>
     <br>
