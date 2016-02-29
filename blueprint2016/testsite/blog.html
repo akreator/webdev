@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head> <!-- First thing to load -- want style to load first -->
+  <script src="http://code.jquery.com/jquery-1.12.1.js"></script>
+  <script src='https://cdn.firebase.com/js/client/2.2.1/firebase.js'></script>
+  <script src="blog.js"></script>
+
+  <style>
+    body {
+      text-align: center; /* centers all span-type elements */
+      background: #80aaff;
+      padding: 0;
+      margin: 0;
+      font-family: 'Comic Sans MS', sans-serif;
+    }
+
+    #banner-wrapper {
+      width: 100%; /* width in percent = percent of container */
+      height: 300px;
+      overflow: hidden;
+    }
+
+    #banner {
+      margin-top: -200px; /**/
+      width: 100%;
+    }
+
+    #profile {
+      width: 200px;
+      height: 200px;
+      border-radius: 100%;
+      margin-top: -100px; /**/
+    }
+  </style>
+</head>
+<body>
+  <div id="banner-wrapper">
+    <img id="banner" src="http://40.media.tumblr.com/b8526b233a4531540c0e513867e0f126/tumblr_nlxl4tWqMV1rkwa4do1_500.png">
+  </div>
+  <img id="profile" src="profile.png">
+  <h1>Bill Nye</h1>
+
+  <p> It Me. </p>
+  <a href="about.html">About</a>
+  <a href="index.html">Home</a>
+
+  <div id="newpost">
+    <form>
+      <label> Title: <input type="text" id="title"> </label>
+      <br>
+      <textarea rows=5 cols=20 id="content"></textarea>
+      <input type="submit">
+    </form>
+  </div>
+</body>
+</html>

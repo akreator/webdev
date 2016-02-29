@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/blog.iml" filepath="$PROJECT_DIR$/.idea/blog.iml" />
       <module fileurl="file://$PROJECT_DIR$/../../Lesson4/cookies/.idea/cookies.iml" filepath="$PROJECT_DIR$/../../Lesson4/cookies/.idea/cookies.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../blueprint2016/hackathon/.idea/hackathon.iml" filepath="$PROJECT_DIR$/../../blueprint2016/hackathon/.idea/hackathon.iml" />
     </modules>
   </component>
 </project>

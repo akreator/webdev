@@ -1,0 +1,62 @@
+{% extends "sidebase.html" %}
+  {% block style %}
+    body {
+    	padding: 0;
+    	margin: 40;
+
+        font-family: "Lucida Console", Monaco, monospace;
+        color: black;
+    }
+
+    #feedback {
+    	font-weight: bold;
+    	font-size: 60;
+    	font-family: "Lucida Console", Monaco, monospace;
+    }
+
+    #exp {
+    	font-weight: bold;
+    	font-family: Lucida;
+    }
+
+    #uremail {
+    	font-weight: 650;
+    }
+
+    #insertemail {
+        text-align: left;
+    }
+
+    .frontpgbutton {
+      font-family: monospace;
+      padding: 4px 8px;
+      background: white;
+      color: black;
+      border-radius: 7px;
+      border: solid 1px #20538D;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+      margin: 10px;
+    }
+
+  {% endblock %}
+
+  {% block content %}
+
+    <h1 id="feedback" style="font-family: "Lucida Console", Monaco, monospace;">Feedback</h1>
+    <p id="exp" style="font-family: courier">Tell us about your experience.</p>
+<br>
+    <p id="uremail" style="font-family:courier">Your Email:</p>
+      <form action="post">
+         <input type="text" id="insertemail" name="email" />
+    <p id="corq" style="font-family: courier">Comments or Questions?</p>
+
+    <textarea maxlength="2000" rows="20" cols="100" placeholder="Enter text here"></textarea>
+      <!--MAX LENGTH IS 2000 CHARACTERS. CHECK WITH AUDREY--> 
+<br>
+<br>
+    <button class="frontpgbutton">
+    Submit
+    </button>
+      </form>   
+
+  {% endblock %}

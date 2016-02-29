@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block headerinfo %}
+<style>
+    body {
+        font-family: courier;
+        {% if event.bgcolor and event.bgcolor != "#000000" %}
+        background-color: {{ event.bgcolor }};
+        {% endif %}
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<h2>{{ event.location }}</h2>
+<br>
+{{ event.content | safe }}
+<br>
+<br>
+<br>
+<br>
+{{ error }}
+<br>
+<br>
+<form method="POST">
+    {% if event.triggers_from %}
+        {% for t in event.triggers_from %}
+        <input type="radio" name="trigger" value="{{t.key().id()}}">{{ t.action }}
+        {% if t.item_needed %} | <strong> {{t.item_needed}} </strong> {% endif %}
+        <br>
+        <br>
+        {% endfor %}
+    {% endif %}
+    <input type="radio" name="trigger" value="custom">Walk Your Own Path
+    <br>
+    <br>
+    <input type="submit" value="Act">
+</form>
+<br>
+<br>
+<h3>Inventory:</h3>
+<ul>
+    {% for i in user.inventory %}
+    <p>{{ i }}</p>
+    {% endfor %}
+</ul>
+{% endblock %}

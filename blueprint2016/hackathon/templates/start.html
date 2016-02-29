@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="question">
+  <form method="POST">
+    <label> What is your name? <input type="text" name="username"> </label>
+    <br><br>
+    <label>What pronouns do you use? <input type="text" name="pronouns" placeholder="ex. she/her"></label>
+    <br><br>
+    <input type="submit" value="Wake up.">
+    <br><br>
+    {{ error }}
+  </form>
+</div>
+{% endblock %}

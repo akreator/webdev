@@ -89,6 +89,10 @@ class Handler(webapp2.RequestHandler):
         elif blog:
             return json.dumps(blog[0].to_dict())
 
+    def write_json(self, blog):
+        self.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
+        self.write(self.create_json(blog))
+
 
 
 class FrontHandler(Handler):
@@ -200,16 +204,14 @@ class LogoutHandler(Handler):
 class MainJSONHandler(Handler):
     def get(self):
         blog = db.GqlQuery("SELECT * FROM Blog ORDER BY time_posted DESC LIMIT 10")
-        self.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
-        self.write(self.create_json(list(blog)))
+        self.write_json(list(blog))
 
 
 class PermalinkJSONHandler(Handler):
     def get(self, post_id):
         post = Blog.get_by_id(int(post_id))
         if post:
-            self.response.headers['Content-Type'] = 'application/json; charset=UTF-8'
-            self.write(self.create_json([post]))
+            self.write_json([post])
         else:
             self.write("Post not found.")
 

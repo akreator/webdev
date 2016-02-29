@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="post">
+  <p> {{ post.title }} </p>
+  <p> {{ post.datetime }} "\t" {{ post.author }} </p>
+  <p> {{ post.content }} </p>
+</div>
+{% endblock %}
