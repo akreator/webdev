@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1> Walk Your Own Path </h1>
+<br>
+<div class="errormessage"> {{ error }} </div>
+<form method="post">
+    <br>
+    <input type="text" class="input" name="location" value="{{location}}" placeholder="Location"/>
+    <br>
+    <br>
+    <input type="text" class="input" name="item_needed" value="{{item_needed}}" placeholder="Item Used">
+    <br>
+    <br>
+    <input type="text" class="input" name="item_found" value="{{item_found}}" placeholder="Item Found">
+    <br>
+    <br>
+    <input type="text" class="input" name="action" value="{{action}}" placeholder="Action">
+    <br>
+    <br>
+    Pick a background color for your path: <input type="color" class="input" name="bgcolor" value="{{bgcolor}}">
+    <br>
+    <br>
+    Pick the text color for your path: <input type="color" class="input" name="text_color" value="{{text_color}}">
+    <br>
+    <br>
+    <div class="errormessage">
+        To reference the user's name, include &lt;name&gt;.
+        <br>
+        Use &lt;they&gt;, &lt;them&gt;, &lt;their&gt;, and &lt;theirs&gt; to access the user's corresponding pronouns.
+    </div>
+    <br>
+    <textarea rows="20" cols="100" class="textarea" name="content">{{content}}</textarea>
+    <br>
+    <input type="submit" class="submitbutton"
+           value="Post"/>
+</form>
+{% endblock %}

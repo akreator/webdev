@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="question">
+    <form method="POST" id="start-form">
+        <label>What is your name? <input type="text" name="username" class="input"> </label>
+        <br><br>
+        <label>What pronouns do you use?
+            <select name="pronouns" id="pronouns" class="input">
+                <option value="she/her/her/hers">she/her</option>
+                <option value="he/him/his/his">he/him</option>
+                <option value="they/them/their/theirs">they/them</option>
+            </select>
+        </label>
+        <div id="other"></div>
+        <br><br>
+        <input type="submit" class="submitbutton" value="Wake up.">
+        <br><br>
+        <div class="errormessage">
+            {{ error }}
+        </div>
+    </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+{% endblock %}

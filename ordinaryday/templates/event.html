@@ -1,9 +1,9 @@
-{% extends "buttonbase.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <div id="event">
     {% if user.path %}
-    <marquee id="path">
+    <marquee id="displayed-path">
         {% for p in user.path %}
         {{ p }}
         {% endfor %}
@@ -16,10 +16,10 @@
     <h2 class="title">{{ event.location }}</h2>
     <br>
     <div class="content">
-        {{ event.content | escape }}
+        {{ parse_content(event.content) }}
     </div>
     <br>
-    <div class="errormessage">ERROR:{{error}}</div>
+    <div class="errormessage">{{error}}</div>
     <br>
     <div id="actions">
         <form method="POST">
@@ -34,6 +34,11 @@
             <input type="radio" name="next_event" value="custom">Walk Your Own Path
             <br>
             <br>
+            {% if event.user.key().id() == user.key().id() %}
+            <input type="radio" name="next_event" value="edit">Edit your event
+            <br>
+            <br>
+            {% endif %}
             <input type="submit" class="submitbutton" value="Act">
         </form>
     </div>

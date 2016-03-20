@@ -1,4 +1,4 @@
-import jinja2, webapp2, re, os
+import jinja2, webapp2, re, os, datetime
 import databases as my_db
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
@@ -17,7 +17,8 @@ class Handler(webapp2.RequestHandler):
         self.set_cookie("userid", "")
 
     def set_cookie(self, name, value):
-        self.response.headers.add_header('set-cookie', '%s=%s; path=/' % (name, value))
+        expiration_date = datetime.datetime.now() + datetime.timedelta(weeks=52)
+        self.response.set_cookie(name, value, expires=expiration_date, path='/')
 
     def initialize(self, *args, **kwargs):
         webapp2.RequestHandler.initialize(self, *args, **kwargs)
@@ -28,6 +29,14 @@ class Handler(webapp2.RequestHandler):
                 self.set_cookie('userid', '')
         else:
             self.user = None
+
+    def parse_content(self, content):
+        content = content.replace('<name>', self.user.username)
+        content = content.replace('<they>', self.user.pronouns.split('/')[0])\
+                         .replace('<them>', self.user.pronouns.split('/')[1])\
+                         .replace('<their>', self.user.pronouns.split('/')[2])\
+                         .replace('<theirs>', self.user.pronouns.split('/')[3])
+        return content
 
 
 class MainHandler(Handler):
@@ -45,27 +54,34 @@ class MainHandler(Handler):
             if u:
                 self.set_cookie("userid", str(u.key().id()))
                 self.redirect('/0')
-        self.render("start.html", error="Please enter valid values")
+        self.render("start.html", error="Please enter a valid name: letters only.")
 
 
 class EventHandler(Handler):
     def render_event(self, event, current_page, error=""):
-        self.render("event.html", event=event, save_page=current_page, user=self.user, error="")
+        self.render("event.html", event=event, user=self.user, error=error, parse_content=self.parse_content)
 
     def get(self, idnum):
         e = my_db.Event.get_by_num(int(idnum))
         if self.user and e:
             if self.request.get("new") != "true":
-                self.user.path.append(e.location)
+                if not self.user.path or self.user.path[-1] != e.location:
+                    self.user.path.append(e.location)
+                self.user.progress.append(e.id_num)
                 self.user.put()
             self.render_event(event=e, error="", current_page=idnum)
         else:
-            self.redirect('/')
+            if self.user:
+                self.redirect('/%s?new=true' % self.user.progress[-1])
+            else:
+                self.redirect('/')
 
     def post(self, idnum):
         next_event = self.request.get("next_event")
         if next_event == "custom":
             self.redirect('/%s/newpath' % idnum)
+        elif next_event == "edit":
+            self.redirect('/%s/newpath?edit=true' % idnum)
         elif next_event:
             e = my_db.Event.get_by_id(int(next_event))
             if (not e.item_needed) or (e.item_needed in self.user.inventory):
@@ -85,7 +101,13 @@ class EventHandler(Handler):
 
 class NewEventHandler(Handler):
     def get(self, parent_num):
-        self.render("newpath.html", error="", save_page=parent_num)
+        if self.request.get("edit"):
+            e = my_db.Event.get_by_num(int(parent_num))
+            self.render("newpath.html", error="", content=e.content, location=e.location, bgcolor=e.bgcolor,
+                        text_color=e.text_color, item_needed=e.item_needed, item_found=e.item_found, action=e.action,
+                        editting=True)
+        else:
+            self.render("newpath.html", error="")
 
     def post(self, parent_num):
         content = self.request.get("content")
@@ -97,19 +119,20 @@ class NewEventHandler(Handler):
         action = self.request.get("action")
         parent_event = my_db.Event.get_by_num(int(parent_num))
 
-        if content and location and action:
-            e = my_db.Event.create_event(content=content, location=location, action=action,
-                                         parent_event=parent_event, user=self.user, bgcolor=bgcolor,
-                                         text_color=text_color, item_needed=item_needed, item_found=item_found)
-            e.put()
+        if content and location and action and action.lower() != 'walk your own path':
+            if self.request.get('edit'):
+                my_db.Event.update_event(id_num=parent_num, content=content, location=location, action=action,
+                                         bgcolor=bgcolor, item_needed=item_needed, item_found=item_found)
+            else:
+                e = my_db.Event.create_event(content=content, location=location, action=action,
+                                             parent_event=parent_event, user=self.user, bgcolor=bgcolor,
+                                             text_color=text_color, item_needed=item_needed, item_found=item_found)
+                e.put()
             self.redirect('/%s?new=true' % parent_num)
         else:
-            self.render("newpath.html", error="Please make sure you have a location and content", save_page=parent_num)
-
-
-class SetUpHandler(Handler):
-    def get(self):
-        pass
+            self.render('newpath.html', error='Please make sure you have a location, action, and content',
+                        content=content, location=location, bgcolor=bgcolor, text_color=text_color,
+                        item_needed=item_needed, item_found=item_found, action=action)
 
 
 class RestartHandler(Handler):
@@ -122,19 +145,32 @@ class FeedbackHandler(Handler):
     def get(self):
         self.render("feedback.html")
 
+    def post(self):
+        name = self.request.get("name")
+        email = self.request.get("email")
+        feedback = self.request.get("feedback")
+
+        if name and email and feedback:
+            message = """
+                From: anordinarydaygame@gmail.com
+                To: Audrey Kintisch akintisch@gmail.com
+                Subject: Ordinary Day Feedback
+
+                User: %s %s
+                %s
+                """ % (name, email, feedback)
+            f = my_db.Feedback.log_feedback(name=name, email=email, feedback=message)
+            if f:
+                self.render('feedback.html', error='Your response has been recorded.')
+            else:
+                self.render('feedback.html', error='Please enter a valid e-mail address.')
+        else:
+            self.render('feedback.html', error='Please enter values for all fields.')
+
 
 class ContactHandler(Handler):
     def get(self):
         self.render("contact.html")
-
-
-class SaveHandler(Handler):
-    def get(self):
-        save_point = self.request.get("save_point")
-        if save_point:
-            self.user.save_point = int(save_point)
-            self.user.put()
-        self.redirect('/%s?new=true' % save_point)
 
 
 class AboutHandler(Handler):
@@ -150,10 +186,10 @@ class WelcomeHandler(Handler):
             self.redirect('/')
 
     def post(self):
-        if self.user.save_point and self.user.save_point > 0:
-            self.redirect("%s?new=true" % self.user.save_point)
+        if len(self.user.progress) > 0:
+            self.redirect("%s?new=true" % self.user.progress[-1])
         else:
-            self.redirect('/0?new=true')
+            self.redirect('/0')
 
 
 app = webapp2.WSGIApplication([('/', MainHandler),
@@ -162,6 +198,5 @@ app = webapp2.WSGIApplication([('/', MainHandler),
                                ('/restart', RestartHandler),
                                ('/feedback', FeedbackHandler),
                                ('/contact', ContactHandler),
-                               (r'/save', SaveHandler),
                                ('/about', AboutHandler),
                                ('/welcome', WelcomeHandler)], debug=True)

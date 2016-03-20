@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+
+{% block buttons %}
+<button class="frontpgbutton" onclick="location.href='http://ordinarydaygame.appspot.com/about';">
+About
+</button>
+
+<button class="frontpgbutton" onclick="location.href='http://ordinarydaygame.appspot.com/restart';">
+Restart
+</button>
+
+<button class="frontpgbutton" onclick="location.href='/save?progress={{ save_page }}';">
+Save
+</button>
+{% endblock %}
+
+
+{% block content %}
+{% endblock %}

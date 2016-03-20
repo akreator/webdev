@@ -1,0 +1,119 @@
+/* General */
+a {
+  text-decoration: none;
+}
+body {
+  text-align: center;
+  padding: 0;
+  margin: 40;
+  font-family: "Lucida Console", Monaco, monospace;
+  color: black;
+}
+.content {
+  margin-left: 10%;
+  margin-right: 10%;
+  word-wrap: break-word;
+  font-family: courier;
+  font-size: 17px;
+  line-height: 120%;
+}
+.submitbutton {
+  font-family: "Lucida Console", Monaco, monospace;
+  padding: 7px 12px;
+  background: black;
+  color: white;
+  border-radius: 7px;
+  border: solid 1px #20538D;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+  margin: 10px;
+}
+.textarea {
+  margin-left: 10%;
+  margin-right: 10%;
+  font-size: 14px;
+}
+.title {
+  font-weight: bold;
+  font-size: 40;
+  font-family: "Lucida Console", Monaco, monospace;
+}
+
+
+/* Base */
+.frontpgbutton {
+  font-family: "Lucida Console", Monaco, monospace;
+  padding: 7px 12px;
+  background: white;
+  color: black;
+  border-radius: 7px;
+  border: solid 1px #20538D;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+  margin: 10px;
+}
+.footer-link {
+  text-decoration: none;
+  text-align: center;
+  padding: 0px 10px;
+  word-wrap: normal;
+  display: inline-block;
+}
+#footer {
+ /* Nothing yet! */
+}
+#banner-wrapper {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background-color: black;
+  color: white;
+}
+#page-title {
+  font-size:50px;
+  color:white;
+}
+#subtitle {
+  font-weight: 700;
+  font-family:courier;
+  color:white;
+  margin-top:-25px;
+}
+
+
+
+/* Event */
+#event {
+  margin: 10px;
+  font-family: Courier;
+  font-size: 17px;
+  font-weight: 500;
+  /*{% if event.bgcolor and event.bgcolor != "#000000" %}*/
+  background-color: white;/*{{ event.bgcolor }};*/
+  /*{% endif %}*/
+  color: black; /*{{ event.text_color }};*/
+  margin-left: 10%;
+  margin-right: 10%;
+}
+#actions {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-weight: 200;
+  font-size: 14px;
+}
+#inventory {
+  /*nothing yet! */
+}
+
+/* New page */
+.input {
+  font-family: "Lucida Console", Monaco, monospace;
+  padding-left: 5px;
+  padding-right: 5px;
+  border:1px solid #456879;
+  border-radius:10px;
+  height: 22px;
+  width: 230px;
+}
+
+/* feedback page */
+#feedback-form {
+  font-family:courier;
+}

@@ -4,9 +4,8 @@ import re
 
 class Users(db.Model):
     username = db.StringProperty(required=True)
-    pronoun1 = db.StringProperty(required=True)
-    pronoun2 = db.StringProperty(required=True)
-    save_point = db.IntegerProperty()
+    pronouns = db.StringProperty(required=True)
+    progress = db.ListProperty(int)
     path = db.ListProperty(str)
     inventory = db.ListProperty(str)
     joined = db.DateTimeProperty(auto_now_add=True)
@@ -18,7 +17,7 @@ class Users(db.Model):
     @classmethod
     def check_valid_values(cls, username, pronouns):
         name_re = re.compile(r"\w{2,16}$")
-        pronouns_re = re.compile(r"[a-zA-Z]{2,5}/[a-zA-Z]{2,5}")
+        pronouns_re = re.compile(r"[a-zA-Z]{2,5}/[a-zA-Z]{2,5}/[a-zA-Z]{2,5}/[a-zA-Z]{2,5}")
         if name_re.match(username) and pronouns_re.match(pronouns):
             return True
         else:
@@ -28,8 +27,7 @@ class Users(db.Model):
     @classmethod
     def register_user(cls, username, pronouns):
         if cls.check_valid_values(username, pronouns):
-            user = Users(username=username, pronoun1=pronouns.split('/')[0], pronoun2=pronouns.split('/')[1],
-                         save_point=0, inventory=["cell phone", "water bottle"])
+            user = Users(username=username, pronouns=pronouns, inventory=[])
             user.put()
             return user
         else:
@@ -62,13 +60,30 @@ class Event(db.Model):
                   bgcolor=bgcolor, text_color=text_color, item_needed=item_needed, item_found=item_found)
         return e
 
+    @classmethod
+    def update_event(cls, id_num, content, location, action, bgcolor="", text_color="", item_needed="", item_found=""):
+        e = Event.get_by_num(id_num)
+        e.content = content
+        e.location = location
+        e.action = action
+        e.bgcolor = bgcolor
+        e.text_color = text_color
+        e.item_needed = item_needed
+        e.item_found = item_found
+        e.put()
 
-# class Trigger(db.Model):
-#    linked_event = db.ReferenceProperty(Event, collection_name="triggers_to")
- #   parent_event = db.ReferenceProperty(Event, collection_name="triggers_from")
-  #  item_needed = db.StringProperty()
-   # item_found = db.StringProperty()
-    #action = db.StringProperty()
+
+class Feedback(db.Model):
+    name = db.StringProperty(required=True)
+    email = db.StringProperty(required=True)
+    feedback = db.TextProperty(required=True)
+
+    @classmethod
+    def log_feedback(cls, name, email, feedback):
+        email_re = re.compile(r"^[\S]+@[\S]+\.[\S]+$")
+        if email_re.match(email):
+            f = Feedback(name=name, email=email, feedback=feedback)
+            return f
 
 
 class Comment(db.Model):

@@ -1,15 +1,23 @@
-{% extends "base.html" %}
+{% extends "buttonbase.html" %}
 
 {% block content %}
 <div id="question">
-  <form method="POST">
-    <label> What is your name? <input type="text" name="username"> </label>
-    <br><br>
-    <label>What pronouns do you use? <input type="text" name="pronouns" placeholder="ex. she/her"></label>
-    <br><br>
-    <input type="submit" value="Wake up.">
-    <br><br>
-    {{ error }}
-  </form>
+    <form method="POST">
+        <label>What is your name? <input type="text" name="username" class="input"> </label>
+        <br><br>
+        <label>What pronouns do you use? <input type="text" name="pronouns" placeholder="ex. she/her" class="input"></label>
+        <br><br>
+        <input type="submit" class="submitbutton" value="Wake up.">
+        <br><br>
+        <div class="errormessage">
+            {{ error }}
+            ERROR DISPLAYED HERE
+        </div>
+    </form>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
 </div>
 {% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p> Welcome back, {{ user.username }}.</p>
+
+<p> Here is where you have travelled: </p>
+{% for l in user.path %}
+<p>{{ l }}</p>
+{% endfor %}
+
+
+<form method="post">
+    <input type="submit" value="Wake up." class="submitbutton">
+</form>
+
+{% endblock %}

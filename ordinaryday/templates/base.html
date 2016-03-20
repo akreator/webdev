@@ -4,6 +4,7 @@
     {% block headerinfo %}
     {% endblock %}
     <link href="/css/style.css" rel="stylesheet"/>
+    <title>An Ordinary Day</title>
 </head>
 
 <body>
@@ -11,8 +12,17 @@
 <div id="banner-wrapper">
     <a href="http://ordinarydaygame.appspot.com/"><h1 id="page-title">An Ordinary Day</h1></a>
     <p id="subtitle">Walk Your Own Path</p>
-    {% block buttons %}
-    {% endblock %}
+    <button class="frontpgbutton" onclick="location.href='http://ordinarydaygame.appspot.com/about';">
+        About
+    </button>
+
+    <button class="frontpgbutton" onclick="location.href='http://ordinarydaygame.appspot.com/restart';">
+        Restart
+    </button>
+
+    <button class="frontpgbutton">
+        Braintree
+    </button>
 </div>
 
 <br>

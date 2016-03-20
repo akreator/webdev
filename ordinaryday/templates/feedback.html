@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 id="feedback" class="title">Feedback</h1>
+<p id="exp" style="font-family: courier">Tell us about your experience.</p>
+
+<br>
+<div class="errormessage">{{ error }}</div>
+<br>
+
+<form method="post" id="feedback-form">
+    <label>Your name:
+        <input type="text" name="name" class="input"/>
+    </label>
+    <br>
+    <br>
+    <label>Your Email Address:
+        <input type="text" name="email" class="input"/>
+    </label>
+    <br>
+    <br>
+    <br>
+    <label>Comments or Questions? <br>
+        <textarea maxlength="2000" rows="20" cols="100" name="feedback" placeholder="Enter text here" class="textarea"></textarea>
+    </label>
+    <br>
+    <br>
+    <button class="submitbutton">Submit</button>
+</form>
+
+{% endblock %}
